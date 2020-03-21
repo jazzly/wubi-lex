@@ -2,6 +2,18 @@
 namespace wubi.hotkey;
 
 default = /*******
+//中文模式下按 Ctrl+. 切换中英文标点模式
+["Ctrl+."] = function(){  
+    if(key.ime.getOpenStatus()){
+        import win.reg;
+        var reg = win.reg("HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS");
+        var mode = !reg.queryValue("UseEnglishPunctuationsInChineseInputMode") ? 1 : 0
+        reg.setDwValue("UseEnglishPunctuationsInChineseInputMode",mode)	
+        
+        key.ime.changeRequest(0x4090409)
+        key.ime.changeRequest(0x8040804)
+    }  
+};
 ["~calc"] = function(){
 	process.execute("calc.exe")
 }
@@ -9,10 +21,6 @@ default = /*******
 	var word = com.CreateObject("Word.Application")
 	if(word)word.Visible = true; 
 }
-["~time"] = function(){ 
-	var str = time(,"%Y年%m月%d日 %H时%M分%S秒","chs")
-	winex.say(tostring(str));
-}; 
 ["~hi"] = function(){
 	key.send("hello") //可支持UWP应用
 }
@@ -43,6 +51,37 @@ default = /*******
 	} 
 	else key.send(",")
 };
+
+//按 shift + back 变 ctrl + z，因为这时候shift是按下状态，所以可以先发一个key.up("SHIFT")弹起shift键
+["SHIFT+BACK"] = function(){
+	key.up("SHIFT")
+	key.combine("CTRL","Z")
+};
+
+//把斜杠“/”改为顿号
+["/"] = function(){
+	if( key.ime.getOpenStatus() ){
+		winex.say("、")
+	}
+	else {
+		key.send("/")
+	}
+};
+
+//发送字符串
+winex.say("这里是要发送的字符串")
+
+//发送按键字符串
+key.send("/")
+
+//发送按键
+key.press("ENTER")
+
+//判断中文输入法是否打开，打开则执行花括号中的语句
+if( key.ime.getOpenStatus() ){ }
+
+//判断微软五笔候选窗是否显示状态，显示则执行花括号中的语句
+if( wubi.candidateWindow.isVisible() ){}
 
 配置代码使用 aardio 编程语言（ 开发环境仅6.5MB 官网：http://www.aardio.com ）
 中括号里是按键名字串，等号的后面指定输入文本或者执行输入的函数。
