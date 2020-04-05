@@ -225,7 +225,11 @@ class lexFile{
 						int tableOffset = 0xA8;
 							int fileSize;
 					})
-					if(!header) return null;
+					if(!header) {
+						file.close();
+						return null;
+					}
+					
 					file.seek("set",header.tableOffset);
 					
 					var outputMap = this.outputMap;
@@ -239,7 +243,10 @@ class lexFile{
 							WORD codeLength;
 							WORD code[4]; 
 						})
-						if(!record) return null;
+						if(!record){
+							file.close();
+						 	return null;
+						}
 					
 						var len =  (record.length-16); 
 						var word = file.readUnicode(len/2)
@@ -263,6 +270,7 @@ class lexFile{
 						file.seek("cur",2);
 					} 
 					this.codeWeight = codeWeight;
+					file.close();
 				}
 				else { 
 					file.close();

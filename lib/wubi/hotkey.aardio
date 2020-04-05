@@ -4,26 +4,17 @@ namespace wubi.hotkey;
 default = /*******
 //中文模式下按 Ctrl+. 切换中英文标点模式
 ["Ctrl+."] = function(){  
-    if(key.ime.getOpenStatus()){
-        import win.reg;
-        var reg = win.reg("HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS");
-        var mode = !reg.queryValue("UseEnglishPunctuationsInChineseInputMode") ? 1 : 0
-        reg.setDwValue("UseEnglishPunctuationsInChineseInputMode",mode)	
-        
-        key.ime.changeRequest(0x4090409)
-        key.ime.changeRequest(0x8040804)
-    }  
+    import win.reg;
+    var reg = win.reg("HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS");
+    var mode = !reg.queryValue("UseEnglishPunctuationsInChineseInputMode") ? 1 : 0
+    reg.setDwValue("UseEnglishPunctuationsInChineseInputMode",mode)	
+    
+    key.ime.changeRequest(0x4090409)
+    key.ime.changeRequest(0x8040804)
 };
-["~calc"] = function(){
-	process.execute("calc.exe")
-}
-["~word"] = function(){
-	var word = com.CreateObject("Word.Application")
-	if(word)word.Visible = true; 
-}
-["~hi"] = function(){
-	key.send("hello") //可支持UWP应用
-}
+
+/*
+//注意以下代码移动到注释外面生效
 ["~date"] = function(){ 
 	var nums = { ["0"]="〇";["1"]="一";["2"]="二";["3"]="三";["4"]="四";["5"]="五";["6"]="六";["7"]="七";["8"]="八";["9"]="九";}
 	var tm = time()
@@ -35,15 +26,24 @@ default = /*******
 	day = string.replace(day,"〇",""); 
 	month = string.replace(month,"〇",""); 
 	day = string.replace(day,"一十","十");
-	winex.say(year+"年"+month+"月"+day+"日");
+	
+	key.sendString(year+"年"+month+"月"+day+"日");
 }; 
+["~calc"] = function(){
+	process.execute("calc.exe")
+}
+["~word"] = function(){
+	var word = com.CreateObject("Word.Application")
+	if(word)word.Visible = true; 
+}
+
 ["Ctrl+Q,Q"] = function(){
 	import process 
 	import fsys.lnk; 
 	qqpath  = fsys.lnk.search( {"qq.exe";"QQScLauncher.exe";"QQProtect.exe"} )   
 	process.execute( qqpath )
 };
-/*
+
 //取消次选键，放到注释外面生效
 [","] = function(){
 	if( wubi.candidateWindow.isVisible() ){
@@ -61,7 +61,7 @@ default = /*******
 //把斜杠“/”改为顿号
 ["/"] = function(){
 	if( key.ime.getOpenStatus() ){
-		winex.say("、")
+		key.send("、")
 	}
 	else {
 		key.send("/")
@@ -69,9 +69,9 @@ default = /*******
 };
 
 //发送字符串
-winex.say("这里是要发送的字符串")
+key.sendString("这里是要发送的字符串")
 
-//发送按键字符串
+//发送按键
 key.send("/")
 
 //发送按键
