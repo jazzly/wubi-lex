@@ -122,7 +122,7 @@ var installLex = function(appendLex){
 		publish("wubi.system.lex.changed");
 	  
 	  	key.ime.changeRequest(0x4090409); 
-		winform.lbTip.text = ok?'安装成功，如果不能输入，请按 Alt + Shift 来回切换一下即可': string.concat( "安装失败：",err);
+		winform.lbTip.text = ok?'安装成功，如果不能输入，请按 WIN + 空格键 切换一下输入法即可': string.concat( "安装失败：",err);
 		winform.btnCopyToSystem.disabledText = null; 
 		winform.listbox.disabled = false;
 		winform.btnSave.disabled = false;
@@ -228,7 +228,7 @@ winform.listbox.wndproc = function(hwnd,message,wParam,lParam){
 						
 						if(frmWordWeight.doModal()){
 							winform.listbox.disabled = false;
-							winform.msgOk("操作已完成")
+							winform.msgOk(lexName +" 已更新权重字段")
 						} 
 						else {
 							winform.listbox.disabled = false;
@@ -255,8 +255,8 @@ winform.listbox.wndproc = function(hwnd,message,wParam,lParam){
 				
 				winform.popmenu.add("导出到 CSV(UTF-8) 文件",
 					function(id){
-						
-						var csvPath = fsys.dlg.save("*.csv|*.csv","保存编辑器文本到 CSV(UTF-8) 文件",,winform)
+						var lexName = app.lexContents.getNameByIndex(selIndex-1) : "系统码表"
+						var csvPath = fsys.dlg.save("*.csv|*.csv","保存编辑器文本到 CSV(UTF-8) 文件",,winform,,lexName)
 						if(csvPath){ 
 							var lexPath = app.lexContents.getPathByIndex(selIndex-1);
 							
@@ -282,8 +282,8 @@ winform.listbox.wndproc = function(hwnd,message,wParam,lParam){
 				
 				winform.popmenu.add("导出到 JSON 文件",
 					function(id){
-						
-						var jsonPath = fsys.dlg.save("*.json|*.json","保存编辑器文本到 JSON 文件",,winform)
+						var lexName = app.lexContents.getNameByIndex(selIndex-1) : "系统码表"
+						var jsonPath = fsys.dlg.save("*.json|*.json","保存编辑器文本到 JSON 文件",,winform,,lexName)
 						if(jsonPath){ 
 							var lexPath = app.lexContents.getPathByIndex(selIndex-1);
 							
@@ -309,7 +309,8 @@ winform.listbox.wndproc = function(hwnd,message,wParam,lParam){
 				
 				winform.popmenu.add('导出 lzma 压缩码表',function(id){ 
 					import process;
-					var outputPath = fsys.dlg.save("压缩码表（*.lex.lzma）|*.lex.lzma||",,,winform)
+					var lexName = app.lexContents.getNameByIndex(selIndex-1) : "系统码表"
+					var outputPath = fsys.dlg.save("压缩码表（*.lex.lzma）|*.lex.lzma||",,,winform,,lexName)
 					if(!outputPath){
 						return;
 					}
@@ -1154,7 +1155,7 @@ var instalLexText = function(appendLex){
 		
 	tsfUtil.activate();
 	
-	winform.editLex.busy(false,ok?'安装成功，如果不能输入，请按 Alt + Shift 来回切换一下即可': string.concat( "安装失败：",err));
+	winform.editLex.busy(false,ok?'安装成功，如果不能输入，请按 WIN + 空格键 切换一下输入法即可': string.concat( "安装失败：",err));
 	winform.listbox.selIndex = 1;
 	winform.btnCopyToSystem.disable = false;
 	winform.btnSave.disabledText = null;
@@ -1200,6 +1201,7 @@ winform.btnAddFile.oncommand = function(id,event){
 	popmenu.add();
 	 
 	var lexTable = app.lexNetContents.getTable();
+ 
 	for i,lexConfig in table.eachIndex(lexTable){
 		var menu = win.ui.popmenu(winform);
 		for(i=1;#lexConfig.items;1){

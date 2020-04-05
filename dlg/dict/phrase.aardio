@@ -78,7 +78,7 @@ winform.btnSave.oncommand = function(id,event){
 			winform.lbTip.text =err:"安装短语遇到未知错误"
 		}
 		else {
-			winform.lbTip.text = "更新成功,如果不能输入请按ALT+SHIFT切换一次即可";
+			winform.lbTip.text = "更新成功,如果不能输入请按 WIN + 空格键 切换一下输入法即可";
 			key.ime.changeRequest(0x4090409); 
 		}
 		

@@ -1,7 +1,7 @@
 import win.ui;
 import fonts.fontAwesome;
 /*DSG{{*/
-var winform = win.form(text="wubiLex - 帮助";right=977;bottom=602;bgcolor=16777215;border="none")
+var winform = win.form(text="wubiLex - 帮助";right=977;bottom=602;bgcolor=16777215;border="dialog frame")
 winform.add(
 keyboardShortcuts={cls="plus";left=69;top=50;right=927;bottom=437;align="left";border={color=-4144960;radius=8;width=1};db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-15);textPadding={left=10;top=10;right=10;bottom=10};valign="top";z=1};
 lbAbout={cls="plus";text="关于 wubiLex ( Win10 微软五笔助手 ) :";left=39;top=447;right=381;bottom=478;align="left";db=1;dl=1;font=LOGFONT(h=-16);iconColor=2960685;iconStyle={align="left";font=LOGFONT(h=-19;name='FontAwesome')};iconText='\uF059';textPadding={left=30};z=3};
@@ -18,11 +18,11 @@ plus={cls="plus";text="自动更新 :";left=39;top=523;right=381;bottom=554;alig
 winform.keyboardShortcuts.text = /*
 1、Win键 + 空格键：切换输入法。
 
-2、按Alt + Shift键，切换中文/英文键盘。
+2、按Alt + Shift键：切换中文/英文键盘。
 
-3、短按Shift键（或Ctrl + Space）：切换五笔中英文输入模式。
-中文模式下，可以使用小键盘输入数字和小数点（不是句号）。
-英文标点模式下，按Shift + 空格键，切换全角/半角输入。
+3、短按Shift键（或Ctrl + Space）：切换五笔中英文输入模式（ 并自动切换到小写 ）。
+英文模式、或中文模式下切换到英文标点后可按 Shift + 空格键 切换全角/半角输入。
+中文模式可使用小键盘输入小数点（不是句号）。
 
 4、五笔编码自第二码开始可使用Z键通配任意编码（ 首码除外 ）
 

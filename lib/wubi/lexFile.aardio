@@ -519,7 +519,7 @@ class lexFile{
 				
 				for(i=2;#words;1){
 					w = wordWeight[ words[i] ]
-					if(!w || (w<weight[ words[i-1] ]) ){
+					if(!w || (w<=weight[ words[i-1] ]) ){
 						w = weight[ words[i-1] ] + 1;  
 					}
 					
@@ -730,6 +730,8 @@ class lexFile{
 			texts = outputMap[code]
 			for(i=1;#texts;1){
 				var txt = replace(texts[i],'\n',"%0A"); 
+				txt = replace(txt,' ',"%20") 
+				txt = replace(txt,'\t',"%09")
 				strBuilder.append(code+'='+txt+'\r\n'); 
 			}
 		

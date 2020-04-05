@@ -9,7 +9,7 @@ var push = ..table.push;
 
 loadMap = function(wubiUdpPath){
 
-	if(!wubiUdpPath){
+	if( ! ..io.exist(wubiUdpPath) ){
 		return null,"短语词库为空";
 	}	
 		
@@ -146,14 +146,15 @@ load = function(path){
 			var chars = {}
 			for(i=1;#phrases;1){
 		 		var p = phrases[i];
-		 		if(p[2]!=i || (p[1][3]>1 && indexOf(p[1]," ") ) ){
+		 		if(p[2]!=i || (p[3]>2) ){ 
 		 			break
 		 		}
-		 		chars[i] = p[1]
+		 		chars[i] = replace(p[1],' ',"%20")  
 			}
 			
 			if(#phrases == #chars){
 				var txt = replace(join(chars," "),'\n',"%0A");
+				txt = replace(txt,'\t',"%09")
 		 		push(lines,code,'\t$[',txt,']\r\n');
 		 		continue
 			}
@@ -165,6 +166,8 @@ load = function(path){
 				continue
 			}
 			var txt = replace(p[1],'\n',"%0A");
+			txt = replace(txt,' ',"%20") 
+			txt = replace(txt,'\t',"%09")
 			push(lines,code,'\t',txt,'\t',p[2],'\r\n');
 		}
 	}
@@ -308,6 +311,8 @@ saveToSystem = function(phraseText){
 		file.write('\0\0')
 		
 		var txt = replace(phrase[2],"@%0A",'\n')
+		txt = replace(txt,"@%09",'\t') 
+		txt = replace(txt,"@%20",' ')
 		file.write(..string.toUnicode(txt))
 		file.write('\0\0')
 	} 

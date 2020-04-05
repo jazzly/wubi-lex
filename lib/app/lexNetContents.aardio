@@ -23,10 +23,12 @@ namespace app.lexNetContents{
 		..thread.invoke( 
 			function(){
 				import inet.http;
-				var bin = inet.http().get("http://wubi.aardio.com/download/lex/_index.txt");
+				var http = inet.http();
+				http.disableCache();
 				
+				var bin = http.get("http://wubi.aardio.com/download/lex/_index.txt");
 				if(bin){
-					string.save(..io.appData("/aardio/std/wubi/lex-default.table"), bin)
+					string.save(..io.appData("/aardio/std/wubi/lex-default.table"), bin) 
 				}
 			}
 		) 
@@ -66,11 +68,11 @@ namespace app.lexNetContents{
 			name = "五笔98";
 			items = { 
 				{
-					name = "至善词库98( 单字 )";
+					name = "五笔98( 单字 )";
 					url = "http://wubi.aardio.com/download/lex/ChsWubi98.min.lex.lzma";
 				};
 				{
-					name = "至善词库98( 完整 )";
+					name = "五笔98( 完整 )";
 					url = "http://wubi.aardio.com/download/lex/ChsWubi98.lex.lzma";
 				};
 				{

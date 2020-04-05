@@ -63,6 +63,9 @@ winform.btnSave.oncommand = function(id,event){
 	if(!hotkeyMgr){
 		hotkeyMgr =  key.hotkey(winform)
 	} 
+	else {
+		hotkeyMgr.clear();
+	} 
 	
 	var code = "{" + winform.editTable.text + "}"
 	var keyTable
@@ -80,10 +83,25 @@ winform.btnSave.oncommand = function(id,event){
 		} 
 	}
 	
-	if(winform.chkDecimalPoint.checked){
-		//自定义按键处理，返回true阻止按键消息
-		//这个函数的作用是在中文输入法下，可以直接在数字后面输入小数点
+	var prevAlphaKeys = {};
+	var curentAlphaKeys = {};
+	key.hotkey.lastAlphaKeys = function(){ 
+		var keys = prevAlphaKeys;
+		if(#curentAlphaKeys>=5){
+			..table.pop(curentAlphaKeys,1);
+			keys = curentAlphaKeys;
+		}
+		curentAlphaKeys = {};
+		prevAlphaKeys = keys;
+		
+		var str = ..string.pack(keys);
+		str = ..string.match(str,"[A-Z]+$");
+		if(#str) return str;
+	}
+	
+	if(winform.chkDecimalPoint.checked){ 
 		hotkeyMgr.onKeyDown = function(vk){
+			 
 			var prev = hotkeyMgr.prevKeyCode;
 			hotkeyMgr.prevKeyCode = vk;
 		
@@ -91,7 +109,7 @@ winform.btnSave.oncommand = function(id,event){
 				if(prev){
 					if( (prev>='0'# && prev<='9'# ) 
 						|| (prev>=0x60/*_VK_NUMPAD0*/ && prev<=0x69/*_VK_NUMPAD9*/ ) ){ 
-						winex.say(".");
+						key.sendString(".");
         				return true;
         			}	
 				}		
@@ -100,14 +118,36 @@ winform.btnSave.oncommand = function(id,event){
 				if(prev){
 					if( (prev>='0'# && prev<='9'# ) 
 						|| (prev>=0x60/*_VK_NUMPAD0*/ && prev<=0x69/*_VK_NUMPAD9*/ ) ){ 
-						winex.say(",");
+						key.sendString(",");
         				return true;
         			}	
 				}		
 			}
-			
+			elseif( vk>='A'# && vk<='Z'# ){
+				if(prevAlphaKeys.endkey){ ..table.clear(prevAlphaKeys); } 
+				..table.push(curentAlphaKeys,vk);
+			}
+			elseif(#curentAlphaKeys)  {
+				prevAlphaKeys = curentAlphaKeys;
+				curentAlphaKeys = {};
+			} 
 		}
 	}
+	else {
+		hotkeyMgr.onKeyDown = function(vk){
+			 
+			if( vk>='A'# && vk<='Z'# ){
+				..table.push(curentAlphaKeys,vk);
+			}
+			elseif(#curentAlphaKeys) {
+				prevAlphaKeys = curentAlphaKeys;
+				curentAlphaKeys = {};
+			}  
+		}
+	}
+	
+	
+	
 }
 
 import fsys.dlg;
@@ -149,6 +189,13 @@ winform.editTable.modified = false;
 
 winform.chkEnableHotkey.oncommand();
 winform.btnSave.oncommand();
+if(_ARGV.tray){  
+	winform.setTimeout( 
+		function(){
+			winform.btnSave.oncommand();
+		},3000
+	); 	
+}
 
 import process;
 winform.btnHelp.oncommand = function(id,event){
